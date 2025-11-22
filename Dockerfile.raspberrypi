@@ -5,7 +5,7 @@ FROM dtcooper/raspberrypi-os:bookworm AS build
 ARG DEBIAN_FRONTEND=noninteractive
 ARG INDI_VERSION=""
 ARG INDI_DRIVERS=""
-LABEL maintainer="Astro Otter <balistik.fonfon@gmail.com>" \
+LABEL maintainer="mrstone14>" \
       description="INDI Server with drivers compiled for Raspberry Pi" \
       version="1.0"
 
@@ -52,6 +52,8 @@ RUN apt-get update && \
     extra-cmake-modules && \
     apt-get install -y --no-install-recommends libdc1394-dev 2>/dev/null || true && \
     apt-get install -y --no-install-recommends liblimesuite-dev 2>/dev/null || true && \
+    apt-get install -y --no-install-recommends libev4 2>/dev/null || true && \
+    apt-get install -y --no-install-recommends libcamera-apps 2>/dev/null || true && \
     update-ca-certificates && \
     rm -rf /var/lib/apt/lists/*
 

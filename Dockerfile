@@ -3,7 +3,7 @@
 # ----------------------------
 FROM debian:bookworm-slim AS build
 ARG DEBIAN_FRONTEND=noninteractive
-LABEL maintainer="Astro Otter <balistik.fonfon@gmail.com>" \
+LABEL maintainer="mrstone14" \
       description="INDI Server with drivers compiled" \
       version="1.0"
 
