@@ -121,10 +121,29 @@ ARG DEBIAN_FRONTEND=noninteractive
 # Install runtime dependencies
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
-    python3 python3-pip python3-setuptools python3-wheel && \
+      python3 python3-pip python3-setuptools python3-wheel \
+      libev4 && \
     apt-get install -y --no-install-recommends libcamera0 2>/dev/null || true && \
     apt-get install -y --no-install-recommends librpicam0 2>/dev/null || true && \
-    apt-get install -y --no-install-recommends libev4 2>/dev/null || true && \
+    apt-get install -y --no-install-recommends libusb-1.0-0 2>/dev/null || true && \
+    apt-get install -y --no-install-recommends libcfitsio10 2>/dev/null || true && \
+    apt-get install -y --no-install-recommends libjpeg62-turbo 2>/dev/null || true && \
+    apt-get install -y --no-install-recommends libfftw3-single3 2>/dev/null || true && \
+    apt-get install -y --no-install-recommends libtheora0 2>/dev/null || true && \
+    apt-get install -y --no-install-recommends libogg0 2>/dev/null || true && \
+    apt-get install -y --no-install-recommends libgsl27 2>/dev/null || true && \
+    apt-get install -y --no-install-recommends libgslcblas0 2>/dev/null || true && \
+    # Explicit runtime packages for other transitive dependencies
+    apt-get install -y --no-install-recommends libnova-0.16 2>/dev/null || true && \
+    apt-get install -y --no-install-recommends libfftw3-single3 2>/dev/null || true && \
+    apt-get install -y --no-install-recommends libfftw3-double3 2>/dev/null || true && \
+    apt-get install -y --no-install-recommends libfftw3 2>/dev/null || true && \
+    apt-get install -y --no-install-recommends libtiff5 2>/dev/null || true && \
+    apt-get install -y --no-install-recommends librtlsdr0 2>/dev/null || true && \
+    apt-get install -y --no-install-recommends libgphoto2-6 2>/dev/null || true && \
+    apt-get install -y --no-install-recommends libavcodec58 2>/dev/null || true && \
+    apt-get install -y --no-install-recommends libavdevice58 2>/dev/null || true && \
+    apt-get install -y --no-install-recommends libzmq3 2>/dev/null || true && \
     rm -rf /var/lib/apt/lists/*
 
 ## Copy only INDI-related files from build stage
@@ -134,8 +153,17 @@ COPY --from=build /usr/bin/indi* /usr/bin/
 
 # Copy INDI libraries
 RUN mkdir -p /usr/lib
+
 COPY --from=build /usr/lib/libindi* /usr/lib/
 COPY --from=build /usr/lib/*/libindi* /usr/lib/
+
+# Ensure any transitive libraries used by INDI (e.g. libnova) are available
+COPY --from=build /usr/lib/libnova* /usr/lib/
+COPY --from=build /usr/lib/*/libnova* /usr/lib/
+
+# Copy FFTW runtime libraries from build stage (libfftw3.so.3)
+COPY --from=build /usr/lib/libfftw3* /usr/lib/
+COPY --from=build /usr/lib/*/libfftw3* /usr/lib/
 
 # Copy INDI shared data
 COPY --from=build /usr/share/indi/ /usr/share/indi/
