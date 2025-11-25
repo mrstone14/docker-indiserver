@@ -125,6 +125,7 @@ RUN apt-get update && \
       libev4 && \
     apt-get install -y --no-install-recommends libcamera0 2>/dev/null || true && \
     apt-get install -y --no-install-recommends librpicam0 2>/dev/null || true && \
+    apt-get install -y --no-install-recommends libcamera-apps 2>/dev/null || true && \
     apt-get install -y --no-install-recommends libusb-1.0-0 2>/dev/null || true && \
     apt-get install -y --no-install-recommends libcfitsio10 2>/dev/null || true && \
     apt-get install -y --no-install-recommends libjpeg62-turbo 2>/dev/null || true && \
@@ -171,6 +172,11 @@ COPY --from=build /usr/share/indi/ /usr/share/indi/
 # Install indiwebmanager
 RUN pip3 install --no-cache-dir --break-system-packages indiweb
 
+# Copy entrypoint wrapper and make executable
+COPY entrypoint.sh /usr/local/bin/entrypoint.sh
+RUN chmod +x /usr/local/bin/entrypoint.sh
+
+EXPOSE 7624
 EXPOSE 8624
-ENTRYPOINT ["indi-web"]
+ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
 CMD ["--host", "0.0.0.0", "--port", "8624"]

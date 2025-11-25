@@ -1,0 +1,30 @@
+version: "3.8"
+
+services:
+  indiserver:
+    # Pull the prebuilt image from GHCR by default. Override with IMAGE env var.
+    image: ${IMAGE:-ghcr.io/mrstone14/docker-indiserver:rpi}
+    platform: linux/arm64
+
+    # Expose the INDI protocol port and the indi-web manager port
+    ports:
+      - "7624:7624"   # INDI server (device protocol)
+      - "8624:8624"   # indi-web (web UI)
+
+    # Map camera devices from the host into the container (adjust if your devices differ)
+    devices:
+      - "/dev/video0:/dev/video0"
+      - "/dev/vchiq:/dev/vchiq"
+
+    # If your camera access requires extra privileges, set 'privileged: true' (use carefully)
+    # privileged: true
+
+    # Optional environment variables (example: provide extra drivers at runtime)
+    environment:
+      - INDI_DRIVERS=${INDI_DRIVERS:-}
+
+    restart: unless-stopped
+
+# Named volumes (placeholders you can enable if you need persistent data)
+volumes:
+  indi_data: {}

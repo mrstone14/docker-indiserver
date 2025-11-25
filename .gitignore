@@ -16,3 +16,6 @@ build-rpi.log
 # OS
 .DS_Store
 Thumbs.db
+
+# Temporary local clone used for builds/tests
+tmp-indi-3rdparty/
