@@ -31,6 +31,39 @@ _term() {
 
 trap _term INT TERM
 
+# If INDI_DRIVERS is set, send driver start commands into the indiserver FIFO
+if [ -n "${INDI_DRIVERS:-}" ]; then
+  echo "INDI_DRIVERS set: $INDI_DRIVERS — attempting to load drivers via FIFO $FIFO"
+  # Give indiserver a moment to be ready to read the FIFO
+  sleep 0.5
+  for drv in $INDI_DRIVERS; do
+    # Resolve driver executable path order:
+    # 1) absolute path provided as-is
+    # 2) /usr/bin/<drv>
+    # 3) /usr/bin/indi_<drv>
+    if [ -x "$drv" ]; then
+      cmd="$drv"
+    elif [ -x "/usr/bin/$drv" ]; then
+      cmd="/usr/bin/$drv"
+    elif [ -x "/usr/bin/indi_$drv" ]; then
+      cmd="/usr/bin/indi_$drv"
+    else
+      # Fallback: write the raw token — indiserver may resolve it
+      cmd="$drv"
+    fi
+
+    echo "-> Loading driver: $cmd"
+    # Write command into FIFO for indiserver to process
+    if [ -p "$FIFO" ]; then
+      echo "$cmd" >"$FIFO" || true
+    else
+      echo "Warning: FIFO $FIFO not present; cannot load $cmd"
+    fi
+    # small delay between driver loads
+    sleep 0.3
+  done
+fi
+
 # Start indi-web in foreground (with provided args)
 echo "Starting indi-web with args: $@"
 indi-web "$@" &
