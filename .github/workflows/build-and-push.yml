@@ -5,10 +5,12 @@ on:
     branches:
       - main
       - develop
+      - testing
   pull_request:
     branches:
       - main
       - develop
+      - testing
 
 env:
   REGISTRY: ghcr.io
