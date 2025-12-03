@@ -16,21 +16,28 @@ if [ -z "${INDI_DRIVERS:-}" ]; then
   exit 1
 fi
 
-# Build driver argument list
+
+# Map build driver names to executable names if needed
 DRIVER_ARGS=""
 for drv in $INDI_DRIVERS; do
+  # Map 'indi-libcamera' to 'indi_libcamera' for runtime
+  if [ "$drv" = "indi-libcamera" ]; then
+    exe_name="indi_libcamera"
+  else
+    exe_name="$drv"
+  fi
   # Resolve driver executable path order:
   # 1) absolute path provided as-is
-  # 2) /usr/bin/<drv>
-  # 3) /usr/bin/indi_<drv>
-  if [ -x "$drv" ]; then
-    DRIVER_ARGS="$DRIVER_ARGS $drv"
-  elif [ -x "/usr/bin/$drv" ]; then
-    DRIVER_ARGS="$DRIVER_ARGS /usr/bin/$drv"
-  elif [ -x "/usr/bin/indi_$drv" ]; then
-    DRIVER_ARGS="$DRIVER_ARGS /usr/bin/indi_$drv"
+  # 2) /usr/bin/<exe_name>
+  # 3) /usr/bin/indi_<exe_name>
+  if [ -x "$exe_name" ]; then
+    DRIVER_ARGS="$DRIVER_ARGS $exe_name"
+  elif [ -x "/usr/bin/$exe_name" ]; then
+    DRIVER_ARGS="$DRIVER_ARGS /usr/bin/$exe_name"
+  elif [ -x "/usr/bin/indi_$exe_name" ]; then
+    DRIVER_ARGS="$DRIVER_ARGS /usr/bin/indi_$exe_name"
   else
-    DRIVER_ARGS="$DRIVER_ARGS $drv"
+    DRIVER_ARGS="$DRIVER_ARGS $exe_name"
   fi
 done
 

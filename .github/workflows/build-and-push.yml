@@ -30,7 +30,7 @@ jobs:
             platform: linux/amd64,linux/arm64
             tag-suffix: ''
           - dockerfile: Dockerfile.raspberrypi
-            platform: linux/arm/v7, linux/arm64
+            platform: linux/arm64
             tag-suffix: '-rpi'
     
     steps:
