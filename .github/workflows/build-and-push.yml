@@ -26,9 +26,9 @@ jobs:
     strategy:
       matrix:
         include:
-          - dockerfile: Dockerfile
-            platform: linux/amd64,linux/arm64
-            tag-suffix: ''
+          # - dockerfile: Dockerfile
+          #   platform: linux/amd64,linux/arm64
+          #   tag-suffix: ''
           - dockerfile: Dockerfile.raspberrypi
             platform: linux/arm64
             tag-suffix: '-rpi'
@@ -57,6 +57,8 @@ jobs:
             type=semver,pattern={{version}}
             type=semver,pattern={{major}}.{{minor}}
             type=sha,prefix={{branch}}-
+            # Add a simple branch-rpi tag for the rpi build
+            ${{ matrix.tag-suffix == '-rpi' && format('{0}-rpi', github.ref_name) || '' }}
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v5
