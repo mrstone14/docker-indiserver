@@ -75,6 +75,7 @@ jobs:
           cache-to: type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:buildcache${{ matrix.tag-suffix }},mode=max
           build-args: |
             INDI_DRIVERS=indi-libcamera
+            INDI_VERSION=2.1.7
 
 # rpi-runtime-test:
 #   name: Build (RPi) and run runtime ldd checks

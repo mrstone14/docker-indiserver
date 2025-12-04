@@ -3,7 +3,7 @@
 # ----------------------------
 FROM dtcooper/raspberrypi-os:bookworm AS build
 ARG DEBIAN_FRONTEND=noninteractive
-ARG INDI_VERSION="2.1.6"
+ARG INDI_VERSION=""
 ARG INDI_DRIVERS=""
 LABEL maintainer="mrstone14>" \
       description="INDI Server with drivers compiled for Raspberry Pi" \
