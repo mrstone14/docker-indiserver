@@ -3,6 +3,7 @@ build.log
 build-rpi.log
 *.log
 
+logs/
 # Docker
 .dockerignore
 
