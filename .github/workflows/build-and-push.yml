@@ -73,6 +73,8 @@ jobs:
             type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:buildcache${{ matrix.tag-suffix }}
             type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest${{ matrix.tag-suffix }}
           cache-to: type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:buildcache${{ matrix.tag-suffix }},mode=max
+          build-args: |
+            INDI_DRIVERS=indi-libcamera
 
 # rpi-runtime-test:
 #   name: Build (RPi) and run runtime ldd checks
